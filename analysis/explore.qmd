@@ -1,0 +1,38 @@
+---
+title: "Exploratory analysis of serial blood pressures"
+format: gfm
+---
+
+
+
+```{r}
+library(magrittr)
+```
+
+```{r}
+dat_xlsx <- here::here("data", "FMD and SCAD Pregnancy Vitals.xlsx")
+dat <- readxl::read_xlsx(dat_xlsx)
+```
+
+```{r}
+stringr::str_split("20w5d", pattern = "w")
+stringr::str_split("5d", pattern = "d")
+```
+
+
+
+```{r}
+# get number of unique patients
+# it's possible that some patients have more than one pregnancy, too.
+dat$PatientID %>% length()
+
+# parse GA column
+foo <- dat %>%
+    dplyr::mutate(
+        ga_week = purrr::map_dbl(.x = GA, .f = function(x){
+                                                            foo <- stringr::str_split(x, pattern = "w") 
+                                                            foo[[1]][1] %>% as.numeric()})
+            
+     
+    ) 
+```
